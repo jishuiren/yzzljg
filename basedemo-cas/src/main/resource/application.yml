@@ -1,0 +1,14 @@
+server: 
+  port: 8081
+
+spring:
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@10.255.0.204:1521:orcl
+    username: yzzljg
+    password: yzzljg
+
+logging:
+  level:
+    com:
+      jzxtech: debug

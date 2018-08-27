@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Demo测试页</title>
+<script type="text/javascript" src="res/jquery.js"></script>
+</head>
+<body>
+<form id="insertForm">
+	姓名：<input name="name" value="测试数据x" />
+	<br/>
+	整型数组：<input name="intarray" size="3" value="1"/>
+	<input name="intarray" size="3" value="2"/>
+	<input name="intarray" size="3" value="3"/>
+	<br/>
+	文本数组：<input name="txtarray" size="3" value="a" />
+	<input name="txtarray" size="3" value="b" />
+	<input name="txtarray" size="3" value="c" />
+	<input name="txtarray" size="3" value="d" />
+	<br/>
+	创建日期：<input name="createdate" value="2017-07-12" />
+	<br/>
+	创建时间：<input name="createtime" value="2017-07-12 12:11:12" />
+</form>
+<button onclick="addData();">新增数据</button>
+<hr />
+<form id="searchForm">
+	姓名：<input name="name" value="%数据%" /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	创建日期：<input name="createdate$gt" size=8 value="2017-07-12" /> - <input name="createdate$lt" size=8 value="2017-12-30" />
+</form>
+<button onclick="loadData();">查询数据</button>
+<div id="data">
+</div>
+<script type="text/javascript">
+	function getNowFormatDate() {
+	    var date = new Date();
+	    var seperator1 = "-";
+	    var seperator2 = ":";
+	    var month = date.getMonth() + 1;
+	    var strDate = date.getDate();
+	    if (month >= 1 && month <= 9) {
+	        month = "0" + month;
+	    }
+	    if (strDate >= 0 && strDate <= 9) {
+	        strDate = "0" + strDate;
+	    }
+	    var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate;
+	    return currentdate;
+	}
+
+	function getNowFormatDateTime() {
+	    var date = new Date();
+	    var seperator1 = "-";
+	    var seperator2 = ":";
+	    var month = date.getMonth() + 1;
+	    var strDate = date.getDate();
+	    if (month >= 1 && month <= 9) {
+	        month = "0" + month;
+	    }
+	    if (strDate >= 0 && strDate <= 9) {
+	        strDate = "0" + strDate;
+	    }
+	    
+	    var strHours = date.getHours();
+	    if (strHours >= 0 && strHours <= 9) {
+	    	strHours = "0" + strHours;
+	    }
+	    var strMinutes = date.getMinutes();
+	    if (strMinutes >= 0 && strMinutes <= 9) {
+	    	strMinutes = "0" + strMinutes;
+	    }
+	    var strSeconds = date.getSeconds();
+	    if (strSeconds >= 0 && strSeconds <= 9) {
+	    	strSeconds = "0" + strSeconds;
+	    }
+	    
+	    var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+	            + " " + strHours + seperator2 + strMinutes + seperator2 + strSeconds;
+	    return currentdate;
+	}
+
+	function randomData() {
+		$("#insertForm").find("input[name=name]").val("测试数据" + Math.ceil(Math.random() * 1000));
+		$("#insertForm").find("input[name=createdate]").val(getNowFormatDate());
+		$("#insertForm").find("input[name=createtime]").val(getNowFormatDateTime());
+	}
+
+	function addData() {
+		var params = $("#insertForm").serializeArray();
+		$.post("/demo/insert", params, function(rsp) {
+			if (rsp && rsp.success) {
+				alert("新增成功.");
+			} else {
+				alert("新增失败.");
+			}
+			randomData();
+		});
+	}
+
+	function loadData() {
+		var params = $("#searchForm").serializeArray();
+		$.post("/demo/select", params, function(rsp) {
+			$("#data").empty();
+			$.each(rsp, function(i, r) {
+				$("#data").append(JSON.stringify(r) + "<br/>");
+			});
+		});
+	}
+	
+	randomData();
+</script>
+</body>
+</html>
